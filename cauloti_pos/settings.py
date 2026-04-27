@@ -14,9 +14,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get(
-    "CAULOTI_ALLOWED_HOSTS",
-    "127.0.0.1,localhost",
-    "puntoventa-s07l.onrender.com",
+    'ALLOWED_HOSTS', '127.0.0.1,localhost,puntoventa-s07l.onrender.com'
 ).split(",")
 
 CSRF_TRUSTED_ORIGINS = [
