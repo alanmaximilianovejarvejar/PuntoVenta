@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Caja{% endblock %}
+{% block page_subtitle %}Venta rapida con busqueda por codigo o nombre{% endblock %}
+
+{% block content %}
+  <section class="pos-layout" data-search-url="{% url 'search_products' %}" data-checkout-url="{% url 'checkout' %}">
+    <div class="pos-left">
+      <div class="panel pos-search-panel">
+        <label class="pos-search">
+          <span>Producto</span>
+          <input id="productSearch" type="search" autocomplete="off" placeholder="Escanea o escribe para buscar">
+        </label>
+        <div id="searchResults" class="search-results"></div>
+      </div>
+
+      <div class="panel cart-panel">
+        <div class="panel-header">
+          <h2>Carrito</h2>
+          <button id="clearCart" class="icon-button" type="button" title="Vaciar carrito">x</button>
+        </div>
+        <div class="cart-table-wrap">
+          <table class="data-table cart-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cartBody">
+              <tr><td colspan="5" class="empty-state">Agrega productos para iniciar la venta.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <aside class="panel payment-panel">
+      <h2>Cobro</h2>
+      <dl class="totals-list">
+        <div><dt>Subtotal</dt><dd id="subtotalValue">$0.00</dd></div>
+        <div><dt>Impuestos</dt><dd id="taxValue">$0.00</dd></div>
+        <div class="total-line"><dt>Total</dt><dd id="totalValue">$0.00</dd></div>
+      </dl>
+
+      <fieldset class="segmented">
+        <legend>Metodo de pago</legend>
+        <label><input type="radio" name="paymentMethod" value="cash" checked><span>Efectivo</span></label>
+        <label><input type="radio" name="paymentMethod" value="card"><span>Tarjeta</span></label>
+      </fieldset>
+
+      <label id="cashReceivedWrap" class="cash-input">
+        Efectivo recibido
+        <input id="amountReceived" type="number" inputmode="decimal" min="0" step="0.01" value="0">
+      </label>
+
+      <div class="change-box">
+        <span>Cambio</span>
+        <strong id="changeValue">$0.00</strong>
+      </div>
+
+      <button id="checkoutButton" class="button button-primary button-large" type="button">Cobrar</button>
+      <div id="checkoutMessage" class="checkout-message" hidden></div>
+    </aside>
+  </section>
+
+  <dialog id="saleDialog" class="sale-dialog">
+    <div class="dialog-content">
+      <h2>Venta registrada</h2>
+      <p id="saleDialogFolio"></p>
+      <div class="form-actions">
+        <a id="saleTicketLink" class="button" href="#">Ticket</a>
+        <a id="salePdfLink" class="button" href="#">PDF</a>
+        <button id="newSaleButton" class="button button-primary" type="button">Nueva venta</button>
+      </div>
+    </div>
+  </dialog>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/pos.js' %}"></script>
+{% endblock %}
+

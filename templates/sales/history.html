@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load formatters %}
+
+{% block page_title %}Ventas{% endblock %}
+{% block page_subtitle %}Historial y filtros por fecha{% endblock %}
+
+{% block content %}
+  <section class="toolbar">
+    <form method="get" class="search-form">
+      {{ form.start }}
+      {{ form.end }}
+      {{ form.folio }}
+      <button class="button" type="submit">Filtrar</button>
+    </form>
+    <a class="button button-primary" href="{% url 'pos' %}">Abrir caja</a>
+  </section>
+
+  <section class="panel">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Folio</th>
+          <th>Fecha</th>
+          <th>Cajero</th>
+          <th>Pago</th>
+          <th>Estado</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sale in page_obj %}
+          <tr>
+            <td>{{ sale.folio }}</td>
+            <td>{{ sale.created_at|date:"d/m/Y H:i" }}</td>
+            <td>{{ sale.cashier|default:"-" }}</td>
+            <td>{{ sale.get_payment_method_display }}</td>
+            <td><span class="badge {% if sale.status == 'voided' %}badge-warn{% endif %}">{{ sale.get_status_display }}</span></td>
+            <td>{{ sale.total|money }}</td>
+            <td class="table-actions"><a href="{{ sale.get_absolute_url }}">Ver</a></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" class="empty-state">Sin ventas registradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
+

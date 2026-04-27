@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block page_title %}Importar JSON{% endblock %}
+{% block page_subtitle %}Carga archivos generados por este POS{% endblock %}
+
+{% block content %}
+  <section class="panel narrow">
+    <form method="post" enctype="multipart/form-data" class="form-stack">
+      {% csrf_token %}
+      <label>
+        Archivo JSON
+        <input type="file" name="file" accept="application/json" required>
+      </label>
+      <div class="form-actions">
+        <a class="button" href="{% url 'sync_center' %}">Cancelar</a>
+        <button class="button button-primary" type="submit">Importar</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}
+

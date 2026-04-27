@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load formatters %}
+{% load static %}
+
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Resumen operativo del negocio{% endblock %}
+
+{% block content %}
+  <section class="stats-grid">
+    <article class="stat-card accent-green">
+      <span>Hoy</span>
+      <strong>{{ daily_total|money }}</strong>
+      <small>{{ daily_count }} ventas</small>
+    </article>
+    <article class="stat-card accent-amber">
+      <span>Semana</span>
+      <strong>{{ weekly_total|money }}</strong>
+      <small>Acumulado semanal</small>
+    </article>
+    <article class="stat-card accent-coral">
+      <span>Mes</span>
+      <strong>{{ monthly_total|money }}</strong>
+      <small>Acumulado mensual</small>
+    </article>
+    <article class="stat-card accent-ink">
+      <span>Inventario</span>
+      <strong>{{ active_products_count }}</strong>
+      <small>{{ low_stock_count }} con bajo stock</small>
+    </article>
+  </section>
+
+  <section class="dashboard-grid">
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Ventas recientes</h2>
+      </div>
+      <canvas id="salesChart" height="210" data-series='{{ chart_days_json|safe }}'></canvas>
+    </article>
+
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Productos mas vendidos</h2>
+      </div>
+      <div class="rank-list">
+        {% for product in top_products %}
+          <div class="rank-item">
+            <span>{{ forloop.counter }}</span>
+            <div>
+              <strong>{{ product.product_name }}</strong>
+              <small>{{ product.quantity|qty }} piezas</small>
+            </div>
+            <b>{{ product.total|money }}</b>
+          </div>
+        {% empty %}
+          <p class="empty-state">Aun no hay ventas registradas.</p>
+        {% endfor %}
+      </div>
+    </article>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
+

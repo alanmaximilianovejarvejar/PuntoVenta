@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block page_title %}Ajuste de inventario{% endblock %}
+{% block page_subtitle %}Entrada, salida o correccion manual{% endblock %}
+
+{% block content %}
+  <section class="panel narrow">
+    <form method="post" class="form-stack">
+      {% csrf_token %}
+      {% for field in form %}
+        <label>
+          {{ field.label }}
+          {{ field }}
+          {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+        </label>
+      {% endfor %}
+      <div class="form-actions">
+        <a class="button" href="{% url 'inventory_overview' %}">Cancelar</a>
+        <button class="button button-primary" type="submit">Guardar ajuste</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}
+

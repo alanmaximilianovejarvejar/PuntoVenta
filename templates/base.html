@@ -1,0 +1,90 @@
+{% load static %}
+{% load role_tags %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}{{ APP_NAME }}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+  {% if user.is_authenticated %}
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="{% url 'dashboard' %}">
+          <span class="brand-mark">C</span>
+          <span>
+            <strong>Cauloti</strong>
+            <small>Punto de venta</small>
+          </span>
+        </a>
+        <nav class="nav">
+          <a href="{% url 'dashboard' %}">Dashboard</a>
+          <a href="{% url 'pos' %}">Caja</a>
+          <a href="{% url 'sale_history' %}">Ventas</a>
+          <a href="{% url 'product_list' %}">Productos</a>
+          {% if user|has_role:"admin" %}
+            <a href="{% url 'inventory_overview' %}">Inventario</a>
+            <a href="{% url 'category_list' %}">Categorias</a>
+            <a href="{% url 'sync_center' %}">Sincronizacion</a>
+            <a href="{% url 'user_list' %}">Usuarios</a>
+          {% endif %}
+        </nav>
+        <form method="post" action="{% url 'logout' %}" class="sidebar-footer">
+          {% csrf_token %}
+          <button class="button button-ghost" type="submit">Salir</button>
+        </form>
+      </aside>
+      <main class="main">
+        <header class="topbar">
+          <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobileNav">
+            <span></span>
+            <span></span>
+            <span></span>
+            <strong>Menu</strong>
+          </button>
+          <div>
+            <h1>{% block page_title %}{{ APP_NAME }}{% endblock %}</h1>
+            <p>{% block page_subtitle %}Operacion local offline{% endblock %}</p>
+          </div>
+          <div class="user-chip">
+            <span>{{ user.username }}</span>
+          </div>
+        </header>
+        <nav id="mobileNav" class="mobile-nav" hidden>
+          <a href="{% url 'dashboard' %}">Dashboard</a>
+          <a href="{% url 'pos' %}">Caja</a>
+          <a href="{% url 'sale_history' %}">Ventas</a>
+          <a href="{% url 'product_list' %}">Productos</a>
+          {% if user|has_role:"admin" %}
+            <a href="{% url 'inventory_overview' %}">Inventario</a>
+            <a href="{% url 'category_list' %}">Categorias</a>
+            <a href="{% url 'sync_center' %}">Sincronizacion</a>
+            <a href="{% url 'user_list' %}">Usuarios</a>
+          {% endif %}
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Salir</button>
+          </form>
+        </nav>
+        {% if messages %}
+          <section class="messages">
+            {% for message in messages %}
+              <div class="message message-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          </section>
+        {% endif %}
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  {% else %}
+    <main class="auth-page">
+      {% block auth_content %}{% endblock %}
+    </main>
+  {% endif %}
+  <script src="{% static 'js/ui.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

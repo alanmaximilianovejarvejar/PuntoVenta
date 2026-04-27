@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block page_title %}Categorias{% endblock %}
+{% block page_subtitle %}Organizacion del catalogo{% endblock %}
+
+{% block content %}
+  <section class="action-row">
+    <a class="button button-primary" href="{% url 'category_create' %}">Nueva categoria</a>
+  </section>
+  <section class="panel">
+    <table class="data-table">
+      <thead><tr><th>Nombre</th><th>Productos</th><th>Activa</th></tr></thead>
+      <tbody>
+        {% for category in categories %}
+          <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.products.count }}</td>
+            <td>{{ category.is_active|yesno:"Si,No" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
+

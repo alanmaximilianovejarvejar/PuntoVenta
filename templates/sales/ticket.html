@@ -1,0 +1,97 @@
+{% load formatters %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ticket {{ sale.folio }}</title>
+  <style>
+    body {
+      background: #f6f3ee;
+      color: #191919;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+    }
+    .ticket {
+      background: #fff;
+      border: 1px solid #ded8cf;
+      margin: 0 auto;
+      padding: 18px;
+      width: 300px;
+    }
+    .logo {
+      align-items: center;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .mark {
+      align-items: center;
+      background: #0f766e;
+      border-radius: 8px;
+      color: #fff;
+      display: inline-flex;
+      font-weight: 800;
+      height: 34px;
+      justify-content: center;
+      width: 34px;
+    }
+    h1 { font-size: 16px; margin: 0; }
+    p { margin: 4px 0; }
+    table { border-collapse: collapse; font-size: 12px; width: 100%; }
+    td { padding: 4px 0; vertical-align: top; }
+    .right { text-align: right; }
+    .totals { border-top: 1px dashed #888; margin-top: 8px; padding-top: 8px; }
+    .total { font-size: 16px; font-weight: 800; }
+    .actions { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+    button, a { background: #0f766e; border: 0; border-radius: 7px; color: #fff; padding: 9px 12px; text-decoration: none; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .ticket { border: 0; width: 72mm; }
+      .actions { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="ticket">
+    <div class="logo">
+      <span class="mark">C</span>
+      <div>
+        <h1>Punto de Venta Cauloti</h1>
+        <p>{{ sale.folio }}</p>
+      </div>
+    </div>
+    <p>{{ sale.created_at|date:"d/m/Y H:i" }}</p>
+    <p>Cajero: {{ sale.cashier|default:"-" }}</p>
+    <table>
+      <tbody>
+        {% for item in sale.items.all %}
+          <tr>
+            <td>{{ item.quantity|qty }} x {{ item.product_name }}</td>
+            <td class="right">{{ item.total|money }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="totals">
+      <table>
+        <tr><td>Subtotal</td><td class="right">{{ sale.subtotal|money }}</td></tr>
+        <tr><td>Impuestos</td><td class="right">{{ sale.tax_total|money }}</td></tr>
+        <tr class="total"><td>Total</td><td class="right">{{ sale.total|money }}</td></tr>
+        <tr><td>Pago</td><td class="right">{{ sale.get_payment_method_display }}</td></tr>
+        <tr><td>Recibido</td><td class="right">{{ sale.amount_received|money }}</td></tr>
+        <tr><td>Cambio</td><td class="right">{{ sale.change_given|money }}</td></tr>
+      </table>
+    </div>
+    <p style="text-align:center;margin-top:14px;">Gracias por su compra</p>
+  </main>
+  <div class="actions">
+    <button type="button" onclick="window.print()">Imprimir</button>
+    <a href="{% url 'sale_detail' sale.pk %}">Volver</a>
+  </div>
+</body>
+</html>
+

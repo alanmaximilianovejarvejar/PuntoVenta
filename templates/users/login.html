@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Entrar - {{ APP_NAME }}{% endblock %}
+
+{% block auth_content %}
+  <section class="login-panel">
+    <div class="login-brand">
+      <span class="brand-mark brand-mark-large">C</span>
+      <div>
+        <h1>Punto de Venta Cauloti</h1>
+        <p>Sistema local para caja e inventario</p>
+      </div>
+    </div>
+    <form method="post" class="form-stack">
+      {% csrf_token %}
+      {% if form.errors %}
+        <div class="message message-error">Usuario o contraseña incorrectos.</div>
+      {% endif %}
+      <label>
+        Usuario
+        {{ form.username }}
+      </label>
+      <label>
+        Contraseña
+        {{ form.password }}
+      </label>
+      <button class="button button-primary" type="submit">Entrar</button>
+    </form>
+  </section>
+{% endblock %}
+

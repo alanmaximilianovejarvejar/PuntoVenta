@@ -1,0 +1,41 @@
+:root {
+  background: #f7f5f0;
+  color: #1d2528;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.boot {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.boot-mark {
+  align-items: center;
+  background: #0f766e;
+  border-radius: 8px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 28px;
+  font-weight: 800;
+  height: 64px;
+  justify-content: center;
+  width: 64px;
+}
+
+h1 {
+  margin: 18px 0 6px;
+}
+
+p {
+  color: #66706f;
+  margin: 0;
+}
+

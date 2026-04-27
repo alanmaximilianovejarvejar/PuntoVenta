@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block page_title %}Sincronizacion{% endblock %}
+{% block page_subtitle %}Exportacion local y base para sincronizacion futura{% endblock %}
+
+{% block content %}
+  <section class="action-row">
+    <a class="button button-primary" href="{% url 'export_json' %}">Exportar JSON</a>
+    <a class="button" href="{% url 'export_sales_csv' %}">Exportar ventas CSV</a>
+    <a class="button" href="{% url 'import_json' %}">Importar JSON</a>
+  </section>
+
+  <section class="stats-grid compact">
+    <article class="stat-card accent-green">
+      <span>Productos</span>
+      <strong>{{ exports.products }}</strong>
+    </article>
+    <article class="stat-card accent-amber">
+      <span>Ventas</span>
+      <strong>{{ exports.sales }}</strong>
+    </article>
+    <article class="stat-card accent-coral">
+      <span>Partidas</span>
+      <strong>{{ exports.items }}</strong>
+    </article>
+  </section>
+{% endblock %}
+

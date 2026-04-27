@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load formatters %}
+{% load role_tags %}
+
+{% block page_title %}Productos{% endblock %}
+{% block page_subtitle %}Catalogo, precios, codigos e inventario{% endblock %}
+
+{% block content %}
+  <section class="toolbar">
+    <form method="get" class="search-form">
+      <input type="search" name="q" placeholder="Buscar nombre, codigo o SKU" value="{{ term }}">
+      <select name="category">
+        <option value="">Todas las categorias</option>
+        {% for category in categories %}
+          <option value="{{ category.id }}" {% if category_id == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      <button class="button" type="submit">Buscar</button>
+    </form>
+    {% if user|has_role:"admin" %}
+      <a class="button button-primary" href="{% url 'product_create' %}">Nuevo producto</a>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Codigo</th>
+          <th>Categoria</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in page_obj %}
+          <tr>
+            <td>
+              <strong>{{ product.name }}</strong>
+              {% if product.is_low_stock %}<span class="badge badge-warn">Bajo</span>{% endif %}
+            </td>
+            <td>{{ product.barcode }}</td>
+            <td>{{ product.category|default:"-" }}</td>
+            <td>{{ product.sale_price|money }}</td>
+            <td>{{ product.stock_current|qty }}</td>
+            <td class="table-actions"><a href="{{ product.get_absolute_url }}">Ver</a></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="empty-state">No hay productos con esos filtros.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
+

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load formatters %}
+{% load role_tags %}
+
+{% block page_title %}Venta {{ sale.folio }}{% endblock %}
+{% block page_subtitle %}{{ sale.created_at|date:"d/m/Y H:i" }}{% endblock %}
+
+{% block content %}
+  <section class="detail-grid">
+    <article class="panel">
+      <div class="panel-header">
+        <h2>Detalle</h2>
+        <div class="tag-row">
+          <a class="button" href="{% url 'sale_ticket' sale.pk %}">Ticket</a>
+          <a class="button" href="{% url 'sale_ticket_pdf' sale.pk %}">PDF</a>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>Producto</th><th>Cant.</th><th>Precio</th><th>Total</th></tr></thead>
+        <tbody>
+          {% for item in sale.items.all %}
+            <tr>
+              <td>{{ item.product_name }}</td>
+              <td>{{ item.quantity|qty }}</td>
+              <td>{{ item.unit_price|money }}</td>
+              <td>{{ item.total|money }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </article>
+
+    <article class="panel">
+      <dl class="detail-list">
+        <div><dt>Estado</dt><dd>{{ sale.get_status_display }}</dd></div>
+        <div><dt>Metodo</dt><dd>{{ sale.get_payment_method_display }}</dd></div>
+        <div><dt>Subtotal</dt><dd>{{ sale.subtotal|money }}</dd></div>
+        <div><dt>Impuestos</dt><dd>{{ sale.tax_total|money }}</dd></div>
+        <div><dt>Total</dt><dd>{{ sale.total|money }}</dd></div>
+        <div><dt>Recibido</dt><dd>{{ sale.amount_received|money }}</dd></div>
+        <div><dt>Cambio</dt><dd>{{ sale.change_given|money }}</dd></div>
+      </dl>
+      {% if user|has_role:"admin" and sale.status != 'voided' %}
+        <form method="post" action="{% url 'sale_cancel' sale.pk %}" class="form-stack">
+          {% csrf_token %}
+          {{ void_form.reason }}
+          <button class="button button-danger" type="submit">Cancelar venta</button>
+        </form>
+      {% endif %}
+    </article>
+  </section>
+{% endblock %}
+

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block page_title %}Usuarios{% endblock %}
+{% block page_subtitle %}Roles locales para operar sin servicios externos{% endblock %}
+
+{% block content %}
+  <section class="panel">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Roles</th>
+          <th>Activo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for account in users %}
+          <tr>
+            <td>{{ account.username }}</td>
+            <td>{{ account.email|default:"-" }}</td>
+            <td>
+              {% for group in account.groups.all %}
+                <span class="badge">{{ group.name }}</span>
+              {% empty %}
+                <span class="muted">Sin rol</span>
+              {% endfor %}
+            </td>
+            <td>{{ account.is_active|yesno:"Si,No" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
+

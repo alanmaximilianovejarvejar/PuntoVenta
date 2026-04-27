@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load formatters %}
+{% load role_tags %}
+
+{% block page_title %}{{ product.name }}{% endblock %}
+{% block page_subtitle %}Codigo {{ product.barcode }}{% endblock %}
+
+{% block content %}
+  <section class="detail-grid">
+    <article class="panel">
+      <div class="product-hero">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+          <div class="image-placeholder">{{ product.name|first }}</div>
+        {% endif %}
+        <div>
+          <h2>{{ product.name }}</h2>
+          <p>{{ product.description|default:"Sin descripcion" }}</p>
+          <div class="tag-row">
+            <span class="badge">{{ product.category|default:"Sin categoria" }}</span>
+            {% if product.is_low_stock %}<span class="badge badge-warn">Bajo stock</span>{% endif %}
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <dl class="detail-list">
+        <div><dt>Precio</dt><dd>{{ product.sale_price|money }}</dd></div>
+        <div><dt>Costo</dt><dd>{{ product.cost|money }}</dd></div>
+        <div><dt>Stock</dt><dd>{{ product.stock_current|qty }}</dd></div>
+        <div><dt>Minimo</dt><dd>{{ product.min_stock|qty }}</dd></div>
+        <div><dt>Impuesto</dt><dd>{{ product.tax_rate|percent }}</dd></div>
+        <div><dt>SKU</dt><dd>{{ product.sku|default:"-" }}</dd></div>
+      </dl>
+      {% if user|has_role:"admin" %}
+        <div class="form-actions">
+          <a class="button" href="{% url 'product_update' product.pk %}">Editar</a>
+          <form method="post" action="{% url 'product_deactivate' product.pk %}">
+            {% csrf_token %}
+            <button class="button button-danger" type="submit">Desactivar</button>
+          </form>
+        </div>
+      {% endif %}
+    </article>
+  </section>
+{% endblock %}
+

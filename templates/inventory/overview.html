@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load formatters %}
+
+{% block page_title %}Inventario{% endblock %}
+{% block page_subtitle %}Movimientos y alertas de stock{% endblock %}
+
+{% block content %}
+  <section class="action-row">
+    <a class="button button-primary" href="{% url 'inventory_adjustment' %}">Ajustar inventario</a>
+  </section>
+
+  <section class="dashboard-grid">
+    <article class="panel">
+      <div class="panel-header"><h2>Bajo stock</h2></div>
+      <div class="rank-list">
+        {% for product in low_stock_products %}
+          <div class="rank-item">
+            <span>{{ product.name|first }}</span>
+            <div>
+              <strong>{{ product.name }}</strong>
+              <small>Minimo {{ product.min_stock|qty }}</small>
+            </div>
+            <b>{{ product.stock_current|qty }}</b>
+          </div>
+        {% empty %}
+          <p class="empty-state">No hay alertas de bajo stock.</p>
+        {% endfor %}
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-header"><h2>Movimientos recientes</h2></div>
+      <table class="data-table compact-table">
+        <thead><tr><th>Producto</th><th>Tipo</th><th>Cambio</th><th>Stock</th></tr></thead>
+        <tbody>
+          {% for movement in recent_movements %}
+            <tr>
+              <td>{{ movement.product.name }}</td>
+              <td>{{ movement.get_movement_type_display }}</td>
+              <td>{{ movement.quantity_delta|qty }}</td>
+              <td>{{ movement.stock_after|qty }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4" class="empty-state">Sin movimientos.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </article>
+  </section>
+{% endblock %}
+

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}Datos comerciales e inventario inicial{% endblock %}
+
+{% block content %}
+  <section class="panel">
+    <form method="post" enctype="multipart/form-data" class="form-grid">
+      {% csrf_token %}
+      {% for field in form %}
+        <label class="{% if field.name == 'description' %}span-2{% endif %}">
+          {{ field.label }}
+          {{ field }}
+          {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+        </label>
+      {% endfor %}
+      <div class="form-actions span-2">
+        <a class="button" href="{% url 'product_list' %}">Cancelar</a>
+        <button class="button button-primary" type="submit">Guardar</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}
+
