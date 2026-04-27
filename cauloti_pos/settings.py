@@ -11,11 +11,12 @@ SECRET_KEY = os.environ.get(
     "dev-only-change-me-before-distribution-ca uloti".replace(" ", ""),
 )
 
-DEBUG = os.environ.get("CAULOTI_DEBUG", "1") == "1"
+DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get(
     "CAULOTI_ALLOWED_HOSTS",
     "127.0.0.1,localhost",
+    "puntoventa-s07l.onrender.com",
 ).split(",")
 
 CSRF_TRUSTED_ORIGINS = [
